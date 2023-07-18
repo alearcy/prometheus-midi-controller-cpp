@@ -5,50 +5,59 @@ import QtQuick.Layouts
 
 ColumnLayout {
     id: columnLayout
-    property int pinNumber
-    property alias text: faderLabel.text
+
     property alias cc_value: spinBox.value
     property alias displayedValue: fader.value
-    // signal ccValueChanged(int pin, int value)
+    property int pinNumber
+    property alias text: faderLabel.text
+
+    signal ccNameChanged(int pin, string ccName)
     signal ccValueChanged(int pin, int value)
 
-    Label {
+    TextEdit {
         id: faderLabel
-        text: ""
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
+
         Layout.fillWidth: true
         color: "white"
-    }
+        horizontalAlignment: Text.AlignHCenter
+        selectionColor: "red"
+        text: ""
+        verticalAlignment: Text.AlignVCenter
 
+        Keys.onReturnPressed: {
+            faderLabel.focus = false;
+            editingFinished();
+        }
+        onEditingFinished: {
+            ccNameChanged(pinNumber, faderLabel.text);
+        }
+    }
     Slider {
         id: fader
-        width: 200
-        height: 205
-        stepSize: 1
-        to: 127
-        from: 1
-        orientation: Qt.Vertical
-        scale: 1
         Layout.fillHeight: true
         Layout.fillWidth: true
+        from: 1
+        orientation: Qt.Vertical
         rotation: 0
+        scale: 1
+        stepSize: 1
+        to: 127
         value: 1
     }
-
     SpinBox {
         id: spinBox
-        Layout.fillWidth: false
-        wheelEnabled: true
-        editable: true
-        to: 127
-        from: 1
-        value: 0
+
         Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        Layout.fillWidth: false
+        editable: true
+        from: 1
+        to: 127
+        value: 0
+        wheelEnabled: true
+
         onValueModified: {
             ccValueChanged(pinNumber, value);
         }
     }
 }
-
 
