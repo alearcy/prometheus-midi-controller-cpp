@@ -40,7 +40,6 @@ void Backend::getAvailableSerialPorts() {
 void Backend::toggleSerial()
 {
     if (serialToggled) {
-
         emit getIsSerialConnected(false);
         serial->close();
     } else {
@@ -64,7 +63,6 @@ void Backend::toggleSerial()
             emit getIsSerialConnected(false);
         }
     }
-
 }
 
 void Backend::setMidiDevice(unsigned int currentIndex)
@@ -134,10 +132,15 @@ void Backend::receive()
         QByteArray data = serial->readLine();
         QString values = QString::fromStdString(data.toStdString());
         auto simplifiedString = values.simplified();
-        QList split_data = simplifiedString.split(",");
-        uint cc = split_data[0].toUInt();
-        uint ccValue = split_data[1].toUInt();
-        sendMidiMessage(cc, ccValue);
+        QList splitted_data = simplifiedString.split(",");
+        uint cc = splitted_data[0].toUInt();
+        uint cc_value = splitted_data[1].toUInt();
+        m_message[0] = 176;
+        m_message[1] = faders[cc];
+        m_message[2] = cc_value;
+        qDebug() << m_message;
+        midiOut->sendMessage(&m_message);
+        emit getCCValue(cc, cc_value);
     }
 }
 

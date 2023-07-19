@@ -51,9 +51,9 @@ private:
     QSerialPortInfo *serialInfo;
     QList<QSerialPortInfo> serialPorts;
     QString m_serialPortName;
-    bool serialToggled = false;
-    std::string midiPortName;
     QString m_faderOneName = "Modulation";
+    std::string midiPortName;
+    bool serialToggled = false;
     void configureSerialPort();
     void sendMidiMessage(uint cc, uint ccValue);
     QString dataRead;
